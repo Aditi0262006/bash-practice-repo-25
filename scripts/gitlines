@@ -2,3 +2,35 @@
 
 # TODO: Display lines of code by language in a remote git repository
 # Refer "cloc" command or similar
+chk() {
+    if ! command -v "$1" &>/dev/null; then
+        echo "❌ Error: '$1' not found. Install it and try again." >&2
+        exit 1
+    fi
+}
+
+chk git   
+chk cloc  # Cloc is used for code analysis
+
+if [[ $# -ne 1 ]]; then
+    echo "⚠️ Usage: $0 <repo-url>"
+    exit 1
+fi
+
+URL="$1"
+TMP=$(mktemp -d)
+
+echo "🔍 Cloning $URL..."
+if ! git clone --depth 1 "$URL" "$TMP" &>/dev/null; then
+    echo "❌ Error: Clone failed. Check URL & internet."
+    exit 1
+fi
+echo "✅ Clone successful."
+
+# cloc will be used here
+echo "📊 Analyzing code..."
+cloc "$TMP"
+
+echo "🧹 Removing temp files..."
+rm -rf "$TMP"
+echo "✅ Done!"
