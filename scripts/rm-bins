@@ -2,3 +2,6 @@
 
 # Remove all the binary files (usually made after gcc) present inside current directory
 # Refer "man find" for more information, you can also use modern tool like fd instead of find
+echo "🔍 Searching for binary files in the current directory..."
+find . -maxdepth 1 -type f -executable -exec rm -v {} \;
+echo "✅ All binary files have been removed successfully!"
